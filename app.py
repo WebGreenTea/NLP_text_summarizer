@@ -6,6 +6,7 @@ from datetime import datetime as date
 import os
 import PyPDF2
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import glob
 
 # device = 0 if torch.cuda.is_available() else -1
 # print('load model...')
@@ -90,8 +91,29 @@ def summary():
 
 @app.route("/myfiles")
 def myfiles():
-    
-    return render_template('myfiles.html')
+    FileTypes = ('*.txt','*.pdf')
+    filenames = []
+    times = []
+    all_files = []
+    for filestype in FileTypes:
+        path = f"{str(pathlib.Path(__file__).parent.resolve().as_posix())}/text_files/{filestype}"
+        all_files += glob.glob(path)
+    for filePath in all_files:
+        fileName = filePath.split('\\')
+        fileName = fileName[len(fileName)-1]
+        fileName = fileName.split("_")
+        if(len(fileName) < 3):
+            continue
+        time = fileName[0]+"_"+fileName[1]
+        times.append(time)
+        fileName = fileName[2]
+        filenames.append(fileName)
+
+    #filenames = enumerate(filenames)
+    print(filenames)
+    print(times)
+    data = {'filenames':filenames,'times':times}
+    return render_template('myfiles.html',data=data)
 
 if __name__ == '__main__':
     app.run(debug=True)

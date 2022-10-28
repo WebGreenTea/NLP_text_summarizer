@@ -33,13 +33,34 @@
             <h2 class="fw-bold">Your Files</h2>
         </div>
         <div class="row">
-            <div class="col-3">
-                
+            <div class="d-grid gap-2 col-3" id="fileBtnList">
+                <!-- file name button is here -->
             </div>
-            <div class="col-9">
-
+            <div class="col-9" id="fileContent">
+              <h1 class="ms-5" id="fileContent_name"></h1>
             </div>
         </div>
     </div>
 </body>
+<script>
+  var data = {{data|tojson}}
+  var filenames = data.filenames
+  var times =data.times
+  data = null
+  console.log(filenames)
+  console.log(times)
+
+  var fileBtnList = document.getElementById('fileBtnList')
+  var fileContent = document.getElementById('fileContent')
+  var fileContent_name = document.getElementById('fileContent_name')
+
+  for(let i = 0;i<filenames.length;i++){
+    fileBtnList.innerHTML += `<button class="btn btn-file">${filenames[i]}</button>`
+  }
+  fileContent_name.innerHTML = filenames[0]
+  
+
+  
+
+</script>
 </html>
