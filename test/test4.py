@@ -1,10 +1,5 @@
-from transformers import pipeline
-import torch
-device = 0 if torch.cuda.is_available() else -1
-print('load model...')
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn",device=device)
-print('load complete')
-article = """New York (CNN)When Liana Barrientos was 23 years old, she got married in Westchester County, New York.
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+text_example = """New York (CNN)When Liana Barrientos was 23 years old, she got married in Westchester County, New York.
 A year later, she got married again in Westchester County, but to a different man and without divorcing her first husband.
 Only 18 days after that marriage, she got hitched yet again. Then, Barrientos declared "I do" five more times, sometimes only within two weeks of each other.
 In 2010, she married once more, this time in the Bronx. In an application for a marriage license, she stated it was her "first and only" marriage.
@@ -21,7 +16,16 @@ The case was referred to the Bronx District Attorney\'s Office by Immigration an
 Investigation Division. Seven of the men are from so-called "red-flagged" countries, including Egypt, Turkey, Georgia, Pakistan and Mali.
 Her eighth husband, Rashid Rajput, was deported in 2006 to his native Pakistan after an investigation by the Joint Terrorism Task Force.
 If convicted, Barrientos faces up to four years in prison.  Her next court appearance is scheduled for May 18."""
-print('summary...')
-#summary = summarizer(article, max_length=130, min_length=30)
-summary = summarizer(article)
+
+tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-cnn")
+model = AutoModelForSeq2SeqLM.from_pretrained("facebook/bart-large-cnn").to('cuda:0')
+
+print('tokenize....')
+tokens_input = tokenizer.encode("summarize: "+text_example, return_tensors='pt', max_length=512, truncation=True).to('cuda:0')
+print('ids....')
+ids = model.generate(tokens_input, min_length=80, max_length=120)
+print('summary....')
+summary = tokenizer.decode(ids[0], skip_special_tokens=True)
+
+
 print(summary)
