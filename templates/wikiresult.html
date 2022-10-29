@@ -26,19 +26,25 @@
                   </li>
                 </ul>
               </div>
+            <!-- <a class="navbar-brand text-light" href="/">Home</a>
+            <a class="navbar-brand text-light" href="#">MyFiles</a>
+            <a class="navbar-brand text-light" href="#">Summary from Wikipedia</a> -->
         </div>
     </nav>
     <div class="container">
-        <div class="d-flex justify-content-center mt-5">
-            <h1 class="fw-bold mb-3">Summarized</h1>
+        <div class="d-flex justify-content-center mt-5 mb-5">
+            <h1 class="fw-bold mb-3">Summarized articles from Wikipedia</h1>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div>
+                <h2 class="fw-bold">{{title}}</h2>
+            </div>
+            <div>
+                <button class="btn btn-wiki rounded-pill" onclick="window.open('{{url}}')">View on Wikipedia</button>
+            </div>
         </div>
         <div>
-            {% for filename,summary in results %}
-                <p class="fw-bold fs-5 filename">{{filename}}</p>
-                <pre style="white-space: pre-line; line-height: 2.5; direction: ltr;">{{summary}}</pre>
-                <hr>
-            {% endfor %}
+            <pre style="white-space: pre-line; line-height: 2.5; direction: ltr;">{{summary}}</pre>
         </div>
     </div>
-</body>
 </html>

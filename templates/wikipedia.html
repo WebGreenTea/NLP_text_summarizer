@@ -35,29 +35,14 @@
         <div class="w-100 mb-50" >
             <div id="inputMenu">
                 <div class="text-center mb-4">
-                    <h1>Input your articles</h1>
+                    <h1>Search articles from Wikipedia</h1>
                 </div>
                 <div class="border border-purple p-4 rounded">
-                    <div class="btn-group mb-3" role="group" >
-                        <input type="radio" class="btn-check" id="input1" name="inputtype" value="1" checked onchange="handleInputTypeChange(this)">
-                        <label for="input1" class="btn btn-outline-purple shadow-none">Upload text file</label>
-                        <input type="radio" class="btn-check" id="input2" name="inputtype" value="2" onchange="handleInputTypeChange(this)">
-                        <label for="input2" class="btn btn-outline-purple shadow-none">Type text</label>
-                    </div>
-
-                    <form action="{{MAIN_URL}}summary" method="POST" enctype="multipart/form-data" id="fileform" >
-                        <input class="form-control form-control-lg" id="file" type="file" name="file[]" multiple accept=".txt, .pdf"/>
+                    <form action="{{MAIN_URL}}wikiresult" method="POST" enctype="multipart/form-data" id="searchform" onsubmit="event.preventDefault();">
+                        <input class="form-control form-control-lg" id="search" type="text" name="search" onfocus="clearFail()"/>
+                        <p class="text-danger" id="searchfail"></p>
                         <div class="d-flex justify-content-center mt-2">
-                            <button class="btn btn-hover color-summary width180" onclick="showLoad()">Summary</button>
-                        </div>
-                    </form>
-                    <form action="{{MAIN_URL}}summary" method="POST" style="display: none;" id="typeform" >
-                        <div class="form-group"> 
-                            <textarea class="form-control" name="articles" id="textinput" rows="5" placeholder="Type your text"></textarea>
-                            <div class="d-flex justify-content-center mt-2">
-                                <button class="btn btn-hover color-summary width180" onclick="showLoad()">Summary</button>
-                            </div>
-                            
+                            <button class="btn btn-hover color-summary" onclick="searchwiki()">Search and Summary</button>
                         </div>
                     </form>
                 </div>
@@ -72,37 +57,45 @@
                     <div class="spinner-grow ms-2 me-2" role="status"></div>
                     <div class="spinner-grow ms-2 me-2" role="status"></div>
                 </div>
-                
             </div>
-            
-            
         </div>
     </div>
 </body>
 <script>
-    var inputMenu = document.getElementById('inputMenu')
     var loading = document.getElementById('loading')
-    
+    var inputMenu = document.getElementById('inputMenu')
+    var searchfail = document.getElementById('searchfail')
+    var searchform = document.getElementById('searchform')
 
-    function handleInputTypeChange(radio){
-        let typeform = document.getElementById('typeform')
-        let fileform = document.getElementById('fileform')
-        if(radio.value == 1){
-            document.getElementById('textinput').value = '';
-            fileform.style.display = 'block'
-            typeform.style.display = 'none'
-        }else{
-            document.getElementById("file").value = "";
-            fileform.style.display = 'none'
-            typeform.style.display = 'block'
+
+    function searchwiki(){
+        search = document.getElementById('search').value.trim()
+        if(search != ''){
+            inputMenu.style.display = 'none'
+            loading.style.display = 'block'
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "searchwiki",
+                dataType: "json",
+                data: JSON.stringify({search: search}),
+                success:function(res){
+                    let title = res['title']
+                    if(title == ''){
+                        searchfail.innerHTML = `"${search}" does not match any page on wikipedia.`
+                        inputMenu.style.display = 'block'
+                        loading.style.display = 'none'
+                    }else{
+                        searchform.submit();
+                    }
+                }
+            });
         }
+        
     }
 
-    function showLoad(){
-        inputMenu.style.display = 'none'
-        loading.style.display = 'block'
+    function clearFail(){
+        searchfail.innerHTML = ''
     }
-
-
 </script>
 </html>
