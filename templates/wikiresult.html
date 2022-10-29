@@ -46,5 +46,12 @@
         <div>
             <pre style="white-space: pre-line; line-height: 2.5; direction: ltr;">{{summary}}</pre>
         </div>
+        <div class="row">
+            {% for pic in img %}
+                <div class="col-2">
+                    <img src="{{pic}}" alt="" class="w-100">
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </html>

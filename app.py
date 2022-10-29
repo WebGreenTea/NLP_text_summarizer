@@ -45,20 +45,21 @@ def summaryWiki(search):
     summary = ''
     title = ''
     try:
-        page = wikipedia.page(search)
+        page = wikipedia.page(search,auto_suggest=False)
         article = page.content
         title = page.title
         url = page.url
         tokens_input = tokenizer.encode("summarize: "+article, return_tensors='pt', max_length=512, truncation=True).to(device)
         ids = model.generate(tokens_input, min_length=80, max_length=120)
         summary = tokenizer.decode(ids[0], skip_special_tokens=True)
-        return (title,summary,url)
+        
+        return (title,summary,url,page.images)
     except:
-        return (None,None)
+        return (None,None,None,None)
 
 def searchWiki(search):
     try:
-        page = wikipedia.page(search)
+        page = wikipedia.page(search,auto_suggest=False)
         return page.title
     except:
         return ''
@@ -199,16 +200,14 @@ def wiki():
 def searchwiki():
     search = request.json['search']
     title = searchWiki(search)
-    print(title)
     return jsonify({'message':'success','title':title,'search':search})
 
 @app.route('/wikiresult', methods=['POST'])
 def wikipedia_search():
     search = request.form.get('search')
-    print(search)
-    title,summary,url = summaryWiki(search)
+    title,summary,url,img = summaryWiki(search)
     #return render_template('wikiresult.html',summary=summary,title=title,search=search)
-    return render_template('wikiresult.html',search=search,title=title,summary=summary,url=url)
+    return render_template('wikiresult.html',search=search,title=title,summary=summary,url=url,img=img)
 
 if __name__ == '__main__':
     app.run(debug=True)
