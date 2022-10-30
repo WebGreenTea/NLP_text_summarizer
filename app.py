@@ -52,10 +52,11 @@ def summaryWiki(search):
         tokens_input = tokenizer.encode("summarize: "+article, return_tensors='pt', max_length=512, truncation=True).to(device)
         ids = model.generate(tokens_input, min_length=80, max_length=120)
         summary = tokenizer.decode(ids[0], skip_special_tokens=True)
-        
+        #return (title,summary,url,page.images)
         return (title,summary,url,page.images)
     except:
-        return (None,None,None,None)
+        #return (None,None,None,None)
+        return (None,None,None)
 
 def searchWiki(search):
     try:
@@ -75,7 +76,7 @@ def summary():
     articles = request.form.getlist('articles')
     filename = request.form.get('filename')
     time = request.form.get('time')
-    print(filename)
+    #print(filename)
     if(len(articles) != 0):#input with type
         filenames = ['']
         if(len(articles[0]) > 0):
@@ -117,13 +118,13 @@ def summary():
                 path = f"{str(pathlib.Path(__file__).parent.resolve().as_posix())}/text_files/{fileName_toSave}"
                 file.save(path)
                 if(fileType(filename) == 'txt'):
-                    print('txt')
+                    #print('txt')
                     f = open(path, 'r',encoding="utf-8")
                     txt = f.read()
                     f.close()
                     articles.append(txt)
                 elif(fileType(filename) == 'pdf'):
-                    print('pdf')
+                    #print('pdf')
                     txt = pdfReader(path)
                     articles.append(txt)
                 else:
@@ -151,17 +152,11 @@ def myfiles():
             continue
         time = fileName[0]+"_"+fileName[1]
         times.append(time)
-        print(fileName)
         fileName = fileName[2:]
         fileName = '_'.join(fileName)
-        print('-------')
-        print(fileName)
         filenames.append(fileName)
 
     #filenames = enumerate(filenames)
-    print('-------')
-    print(filenames)
-    print(times)
     data = {'filenames':filenames,'times':times}
     return render_template('myfiles.html',data=data)
 

@@ -40,18 +40,18 @@
                 <h2 class="fw-bold">{{title}}</h2>
             </div>
             <div>
-                <button class="btn btn-wiki rounded-pill" onclick="window.open('{{url}}')">View on Wikipedia</button>
+                <button class="btn btn-wiki rounded-pill fw-bold" onclick="window.open('{{url}}')">View on Wikipedia</button>
             </div>
         </div>
         <div>
             <pre style="white-space: pre-line; line-height: 2.5; direction: ltr;">{{summary}}</pre>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             {% for pic in img %}
                 <div class="col-2">
                     <img src="{{pic}}" alt="" class="w-100">
                 </div>
             {% endfor %}
-        </div>
+        </div> -->
     </div>
 </html>
