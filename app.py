@@ -1,5 +1,4 @@
 from flask import Flask,render_template,request,redirect,jsonify
-from transformers import pipeline
 import torch
 import pathlib
 from datetime import datetime as date
