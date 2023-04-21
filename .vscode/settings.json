@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/9cb45978-0f58-4c00-bc4c-e6581e91951e/resourceGroups/basic-text-summarizer/providers/Microsoft.Web/sites/basic-text-summarizer",
+    "appService.deploySubpath": "."
+}
